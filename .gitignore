@@ -1,0 +1,4 @@
+fastapi/__pycache__
+fastapi/venv
+telbot/__pycache__
+telbot/venv
