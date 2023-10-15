@@ -30,9 +30,11 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 URL = "https://www.kunteynir.space"
-ADMIN_CHAT_ID = 123456
+ADMIN_CHAT_ID = [828170828, 535751218]
 PORT = 3000
 TOKEN = "6678691592:AAG8bHK3JQA_HAIHo4G8R1Y5_pZHkxHGk7U"  
+
+
 
 
 @dataclass
@@ -71,7 +73,8 @@ async def webhook_update(update: WebhookUpdate, context: CustomContext) -> None:
         f"The user {chat_member.user.mention_html()} has sent a new payload. "
         f"So far they have sent the following payloads: \n\n• <code>{combined_payloads}</code>"
     )
-    await context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=text, parse_mode=ParseMode.HTML)
+    for admin in ADMIN_CHAT_ID:
+        await context.bot.send_message(chat_id=admin, text=text, parse_mode=ParseMode.HTML)
 
 
 async def main() -> None:
