@@ -30,12 +30,15 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 URL = "https://www.kunteynir.space"
-ADMIN_CHAT_ID = [828170828, 535751218]
+ADMIN_CHAT_ID = [828170828] #535751218
 PORT = 3000
 TOKEN = "6678691592:AAG8bHK3JQA_HAIHo4G8R1Y5_pZHkxHGk7U"  
 
-
-
+#@dataclass
+#class GitInfo:
+#    status: bool
+#    owner: str
+#    info: str
 
 @dataclass
 class WebhookUpdate:
@@ -114,12 +117,16 @@ async def main() -> None:
 
     async def health(_: Request) -> PlainTextResponse:
         return PlainTextResponse(content="The bot is still running fine :)")
+    
+#    async def git_check(request: Request) -> PlainTextResponse:
+#        return PlainTextResponse(content="git check");
 
     starlette_app = Starlette(
         routes=[
             Route("/telegram", telegram, methods=["POST"]),
             Route("/healthcheck", health, methods=["GET"]),
             Route("/submitpayload", custom_updates, methods=["POST", "GET"]),
+#            Route("/gitcheck", git_check, methods=["POST"]),
         ]
     )
     webserver = uvicorn.Server(
@@ -131,7 +138,6 @@ async def main() -> None:
         )
     )
 
-    # Run application and webserver together
     async with application:
         await application.start()
         await webserver.serve()
