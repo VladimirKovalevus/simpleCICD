@@ -34,17 +34,10 @@ ADMIN_CHAT_ID = [828170828] #535751218
 PORT = 3000
 TOKEN = "6678691592:AAG8bHK3JQA_HAIHo4G8R1Y5_pZHkxHGk7U"  
 
-#@dataclass
-#class GitInfo:
-#    status: bool
-#    owner: str
-#    info: str
-
 @dataclass
 class WebhookUpdate:
     user_id: int
     payload: str
-
 
 class CustomContext(CallbackContext[ExtBot, dict, dict, dict]):
     @classmethod
@@ -63,6 +56,13 @@ async def start(update: Update, context: CustomContext) -> None:
     text = (
         f"To check if the bot is still running, call <code>{URL}/healthcheck</code>.\n\n"
         f"To post a custom update, call <code>{payload_url}</code>."
+    )
+    await update.message.reply_html(text=text)
+
+#new 
+async def docs(update: Update, context: CustomContext) -> None:
+    text = (
+        f"maybe tap http://77.232.131.238/docs/"
     )
     await update.message.reply_html(text=text)
 
@@ -87,6 +87,7 @@ async def main() -> None:
     )
 
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("docs", docs))
     application.add_handler(TypeHandler(type=WebhookUpdate, callback=webhook_update))
 
     await application.bot.set_webhook(url=f"{URL}/telegram", allowed_updates=Update.ALL_TYPES)
@@ -117,16 +118,12 @@ async def main() -> None:
 
     async def health(_: Request) -> PlainTextResponse:
         return PlainTextResponse(content="The bot is still running fine :)")
-    
-#    async def git_check(request: Request) -> PlainTextResponse:
-#        return PlainTextResponse(content="git check");
 
     starlette_app = Starlette(
         routes=[
             Route("/telegram", telegram, methods=["POST"]),
             Route("/healthcheck", health, methods=["GET"]),
             Route("/submitpayload", custom_updates, methods=["POST", "GET"]),
-#            Route("/gitcheck", git_check, methods=["POST"]),
         ]
     )
     webserver = uvicorn.Server(
